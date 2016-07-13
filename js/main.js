@@ -7,12 +7,8 @@ function linspace(start, stop, num) {
     return res;
 }
 
-// num_steps = 10000
-var num_runs = 10000;
+var num_runs = 5000;
 // var num_runs = 10;
-// num_runs = 1000
-// var X_init = linspace(-10.0, 10.0, num_runs);
-// min_interval = 50
 var min_interval = 0;
 var max_interval = 1000;
 var interval = max_interval;
@@ -41,7 +37,6 @@ var curFunc = sigmoid;
 var curNoise = rnorm;
 var x = linspace(-10, 10, 100);
 var y = x.map(function(x) { return curFunc(x); });
-// X = np.full(num_runs, -5.0)
 var X = X_init;
 var play = true;
 var step = 1;
@@ -73,13 +68,12 @@ var trace2 = {
     name: 'Density of X'
 };
 
-var X_scaled = X.map(function(x) { return Math.sqrt(step) * x; });
 var trace3 = {
-    x: X_scaled,
+    x: X_init,
     type: 'histogram',
     histnorm: 'probability density',
     autobinx: false,
-    xbins: getBins(X_scaled),
+    xbins: getBins(X_init),
     xaxis: 'x2',
     yaxis: 'y2',
     name: 'Density of sqrt(n) * X'
@@ -98,31 +92,32 @@ var layout = {
 
 var data = [trace1, trace2, trace3];
 var plotdiv = document.getElementById('plotdiv');
+var ittxt = $("#iteration");
 
 Plotly.newPlot(plotdiv, data, layout);
 var updateId, redrawId;
 
 function drawIteration(i) {
-    $("#iteration").text(i);
+    ittxt.text(i);
 }
 
 function update() {
-    X = X.map(function(x) { return x - gamma(step) * (curFunc(x) + curNoise()); });
-    drawIteration(step);
+    var g = gamma(step);
+    for (var i = 0; i < num_runs; i++)
+        X[i] -= g * (curFunc(X[i]) + curNoise());
+    // X = X.map(function(x) { return x - gamma(step) * (curFunc(x) + curNoise()); });
+    // drawIteration(step);
     step += 1;
     updateId = window.setTimeout(update, interval);
 }
 
 function redrawPlot() {
-    // console.log(X);
-    // var newData = {
-    //     x: X
-    // };
-    // Plotly.restyle('plotdiv', newData, 1);
-    // plotdiv.dMath.min(X),
+    drawIteration(step);
     trace2.x = X;
     trace2.xbins = getBins(X);
-    var X_scaled = X.map(function(x) { return Math.sqrt(step) * x; });
+    var X_scaled = X.slice(), sr = Math.sqrt(step);
+    for (var i = 0; i < num_runs; i++)
+        X_scaled[i] *= sr;
     trace3.x = X_scaled;
     trace3.xbins = getBins(X_scaled);
     Plotly.redraw(plotdiv);
