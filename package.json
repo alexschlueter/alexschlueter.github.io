@@ -26,5 +26,8 @@
     "gulp-inject": "^4.1.0",
     "gulp-uglify": "^1.5.4",
     "merge2": "^1.0.2"
+  },
+  "dependencies": {
+    "randgen": "^0.1.0"
   }
 }

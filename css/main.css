@@ -3,6 +3,10 @@
     align-items: center;
 }
 
+#plotdiv {
+    height: 600px;
+}
+
 /* full width play / pause buttons */
 .btn-group-justified {
   display: table;

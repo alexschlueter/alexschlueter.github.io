@@ -1,10 +1,3 @@
-function rand(n) {
-    var ret = Array(n);
-    for (i = 0; i < n; i++)
-        ret[i] = Math.random();
-    return ret;
-}
-
 function linspace(start, stop, num) {
     var res = new Array(num);
     var step = (stop - start) / (num - 1);
@@ -18,23 +11,24 @@ function linspace(start, stop, num) {
 var num_runs = 10000;
 // var num_runs = 10;
 // num_runs = 1000
-var X_init = linspace(-10.0, 10.0, num_runs);
-// X_init = np.full(num_runs, -8.0)
+// var X_init = linspace(-10.0, 10.0, num_runs);
 // min_interval = 50
 var min_interval = 0;
 var max_interval = 1000;
 var interval = max_interval;
+var redraw_interval = 1000;
 
 
-function Z() {
-    return rand(num_runs).map(function(x) { return x - 0.5; });
+function uniform() {
+    return 2 * Math.random() - 1;
 }
 
-function H(x, z) {
-    // return -x + z
-    return _.zipWith(x, z, function(x, z) {
-        return 0.5 - 1 / (1 + Math.exp(-x)) + z;
-    });
+function sigmoid(x) {
+    return 1 / (1 + Math.exp(-x)) - 0.5;
+}
+
+function identity(x) {
+    return x;
 }
 
 function gamma(n) {
@@ -42,8 +36,11 @@ function gamma(n) {
     return 3 / n;
 }
 
+var X_init = Array(num_runs).fill(-8.0);
+var curFunc = sigmoid;
+var curNoise = rnorm;
 var x = linspace(-10, 10, 100);
-var y = H(x, Array(100).fill(0));
+var y = x.map(function(x) { return curFunc(x); });
 // X = np.full(num_runs, -5.0)
 var X = X_init;
 var play = true;
@@ -53,7 +50,7 @@ var trace1 = {
     x: x,
     y: y,
     type: 'scatter',
-    name: 'Sigmoid'
+    name: 'h'
 };
 
 function getBins(X, num=50) {
@@ -110,7 +107,7 @@ function drawIteration(i) {
 }
 
 function update() {
-    X = _.zipWith(X, H(X, Z()), function(x, h) { return x + gamma(step) * h; });
+    X = X.map(function(x) { return x - gamma(step) * (curFunc(x) + curNoise()); });
     drawIteration(step);
     step += 1;
     updateId = window.setTimeout(update, interval);
@@ -134,13 +131,13 @@ function redrawPlot() {
 
 updateId = window.setTimeout(update, 0);
 
-redrawId = window.setInterval(redrawPlot, 1000);
+redrawId = window.setInterval(redrawPlot, redraw_interval);
 
 $("#playpause").change(function() {
     if ($("#play").is(":checked")) {
         if (! play) {
             updateId = window.setTimeout(update, 0);
-            redrawId = window.setInterval(redrawPlot, 1000);
+            redrawId = window.setInterval(redrawPlot, redraw_interval);
             play = true;
         }
     } else {
@@ -157,6 +154,16 @@ $("#speed-slider").slider().on("change", function(o) {
 
 $("#reset").click(function() {
     step = 1;
+    var sel = $("#hselect").val();
+    if (sel === "sigmoid") curFunc = sigmoid;
+    else curFunc = identity;
+    trace1.y = x.map(function(x) { return curFunc(x); });
+    sel = $("#idselect").val();
+    if (sel === "dirac") X_init = Array(num_runs).fill(-8.0);
+    else X_init = linspace(-10, 10, num_runs);
+    sel = $("#noiseselect").val();
+    if (sel === "gauss") curNoise = rnorm;
+    else curNoise = uniform;
     X = X_init;
     drawIteration(0);
     redrawPlot();

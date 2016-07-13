@@ -25,10 +25,32 @@
 
     <!-- Add your site or application content here -->
     <div class="container-fluid">
+      <h1>Visualization of the Robbins-Monro Algorithm for Stochastic Approximation</h1>
       <div class="row">
         <div class="col-sm-2 col-vertical-center">
           <form>
-            <div class="form-group">
+            <fieldset class="form-group">
+              <label for="hselect">Function:</label>
+              <select class="form-control" id="hselect">
+                <option value="sigmoid">Shifted Sigmoid</option>
+                <option value="id">Identity</option>
+              </select>
+            </fieldset>
+            <fieldset class="form-group">
+              <label for="idselect">Initial distribution:</label>
+              <select class="form-control" id="idselect">
+                <option value="dirac">Dirac at -8</option>
+                <option value="unif">Uniform in [-10, 10]</option>
+              </select>
+            </fieldset>
+            <fieldset class="form-group">
+              <label for="noiseselect">Noise:</label>
+              <select class="form-control" id="noiseselect">
+                <option value="gauss">Gaussian</option>
+                <option value="unif">Uniform in [-1, 1]</option>
+              </select>
+            </fieldset>
+            <fieldset class="form-group">
               <div class="row">
                 <label class="col-sm-12" for="speed-slider">Speed: <b id="speed-label">1</b></label>
               </div>
@@ -44,8 +66,8 @@
                 data-slider-tooltip="hide"
                 style="width:100%"
               >
-            </div>
-            <div class="form-group">
+            </fieldset>
+            <fieldset class="form-group">
               <div id="playpause" class="btn-group btn-group-justified" role="group" data-toggle="buttons">
                   <label class="btn btn-success-outline active">
                     <input id="play" name="pp" type="radio" checked />Play
@@ -54,12 +76,12 @@
                     <input id="pause" name="pp" type="radio" />Pause
                   </label>
               </div>
-            </div>
+            </fieldset>
             <p>
               Iteration: <span id="iteration">0</span>
             </p>
             <div class="form-group">
-              <button id="reset" type="button" class="btn btn-danger-outline btn-block">Reset</button>
+              <button id="reset" type="button" class="btn btn-danger-outline btn-block">Restart</button>
             </div>
           </form>
         </div>
@@ -75,6 +97,7 @@
     <script src="js/vendor/jquery.min.js"></script>
     <script src="js/vendor/bootstrap-slider.min.js"></script>
     <script src="js/vendor/bokeh-0.12.0.min.js"></script>
+    <script src="js/vendor/randgen.js"></script>
     <script src="js/main.js"></script>
     <script src="js/vendor/bootstrap.min.js"></script>
 
