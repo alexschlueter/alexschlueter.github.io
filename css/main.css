@@ -7,6 +7,11 @@
     height: 600px;
 }
 
+.plot-col {
+     max-width: 100%;
+     padding: 0;
+}
+
 /* full width play / pause buttons */
 .btn-group-justified {
   display: table;

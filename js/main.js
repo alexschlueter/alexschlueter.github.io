@@ -74,27 +74,34 @@ var trace3 = {
     histnorm: 'probability density',
     autobinx: false,
     xbins: getBins(X_init),
-    xaxis: 'x2',
-    yaxis: 'y2',
-    name: 'Density of sqrt(n) * X'
+    name: 'Density of sqrt(n) * X',
+    marker: {
+        color: 'green'
+    }
 };
 
 var layout = {
-    xaxis: {domain: [0, 0.48]},
-    yaxis2: {anchor: 'x2'},
-    xaxis2: {domain: [0.52, 1]},
+    autoscale: true,
     legend: {
         x: 0,
         y: -0.2,
         orientation: 'h'
+    },
+    margin: {
+        l: 40,
+        r: 40,
+        b: 40,
+        t: 40
     }
 };
 
-var data = [trace1, trace2, trace3];
-var plotdiv = document.getElementById('plotdiv');
+var data1 = [trace1, trace2];
+var plotdiv1 = document.getElementById("plotdiv1");
+var plotdiv2 = document.getElementById("plotdiv2");
 var ittxt = $("#iteration");
 
-Plotly.newPlot(plotdiv, data, layout);
+Plotly.newPlot(plotdiv1, data1, layout);
+Plotly.newPlot(plotdiv2, [trace3], layout);
 var updateId, redrawId;
 
 function drawIteration(i) {
@@ -120,7 +127,8 @@ function redrawPlot() {
         X_scaled[i] *= sr;
     trace3.x = X_scaled;
     trace3.xbins = getBins(X_scaled);
-    Plotly.redraw(plotdiv);
+    Plotly.redraw(plotdiv1);
+    Plotly.redraw(plotdiv2);
 }
 
 
@@ -166,5 +174,6 @@ $("#reset").click(function() {
 
 
 $(window).resize(function() {
-    Plotly.Plots.resize(plotdiv);
+    Plotly.Plots.resize(plotdiv2);
+    Plotly.Plots.resize(plotdiv2);
 });
