@@ -48,7 +48,8 @@ var trace1 = {
     name: 'h'
 };
 
-function getBins(X, num=50) {
+function getBins(X, num) {
+    var num = typeof num !== 'undefined' ?  num : 50;
     var mx = Math.max.apply(null, X);
     var mn = Math.min.apply(null, X);
     return {
@@ -82,6 +83,7 @@ var trace3 = {
 
 var layout = {
     autoscale: true,
+    showlegend: true,
     legend: {
         x: 0,
         y: -0.2,
@@ -174,6 +176,8 @@ $("#reset").click(function() {
 
 
 $(window).resize(function() {
+    Plotly.Plots.resize(plotdiv1);
     Plotly.Plots.resize(plotdiv2);
-    Plotly.Plots.resize(plotdiv2);
+    Plotly.redraw(plotdiv1);
+    Plotly.redraw(plotdiv2);
 });
