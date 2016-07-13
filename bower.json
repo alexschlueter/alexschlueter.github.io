@@ -1,0 +1,24 @@
+{
+  "name": "alexschlueter.github.io",
+  "description": "",
+  "main": "rmclt-plotly.js",
+  "authors": [
+    "Alexander Schlüter"
+  ],
+  "license": "ISC",
+  "homepage": "alexschlueter.github.io",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "v4.0.0-alpha.2",
+    "lodash": "^4.13.1",
+    "plotlyjs": "plotly#^1.4.1",
+    "seiyria-bootstrap-slider": "^7.1.1"
+  }
+}
