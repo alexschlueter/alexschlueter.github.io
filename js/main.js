@@ -175,9 +175,8 @@ $("#reset").click(function() {
 });
 
 
-$(window).resize(function() {
-    Plotly.Plots.resize(plotdiv1);
-    Plotly.Plots.resize(plotdiv2);
-    Plotly.redraw(plotdiv1);
-    Plotly.redraw(plotdiv2);
-});
+$(window).resize(_.debounce(function() {
+        Plotly.Plots.resize(plotdiv1);
+        Plotly.Plots.resize(plotdiv2);
+}, 150)
+);
